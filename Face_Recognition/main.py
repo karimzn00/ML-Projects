@@ -6,7 +6,6 @@ import  imutils
 import numpy as np
 import pickle
 from sklearn.preprocessing import LabelEncoder
-from tensorflow.keras.utils import to_categorical
 from tensorflow.keras import Sequential
 from keras.layers import Dense
 from tensorflow import convert_to_tensor
@@ -14,10 +13,8 @@ from keras import models
 import time
 import keras
 import argparse
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten
-from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
-import sklearn
+import sklearn.utils import shuffle
 
 
 
@@ -79,7 +76,7 @@ def Embedding(imagePaths):
                 embeddings.append(vec.flatten()) 
                 total += 1 
     data = {'embeddings' : embeddings, 'name' : persons}
-    print('[KIMTRON] serializing {} encodings...'.format(total))
+    print('[KIMTRON] encodings : {} ...'.format(total))
 
     with open('embeddings', 'wb') as f:
         pickle.dump(data, f)
@@ -88,12 +85,11 @@ def Embedding(imagePaths):
 
 
 def train():
-    #Preparing the Data
     data = pickle.loads(open('embeddings', 'rb').read())
     y = pd.DataFrame(data['name'], columns = ['names'])
     lab = LabelEncoder()
     y['cat'] = lab.fit_transform(y['names'])
-    y = sklearn.utils.shuffle(y)
+    y = shuffle(y)
     output_lent = 1
 
     x = data['embeddings']
@@ -128,7 +124,7 @@ def stream(src):
 
 
     
-    print('[KIMTRON] Starting Video Streaming ... ')
+    print('[KIMTRON] Streaming ... ')
 
 
 
@@ -157,9 +153,7 @@ def stream(src):
                 
              
                 j = np.argmax(preds)
-                print(vec)
-                print(preds)
-                print(j)
+
                 names = persons['names']
                 name = names[persons['cat']==j][0]
                 text = str(name)
@@ -198,21 +192,3 @@ if c == '3':
     stream(0)
     vs.stop()
     cv2.destroyAllWindows()
-
-if c == '4':
-    exit()
-
-
-
-
-
-
-
-
-
-#Embedding(imagePaths)
-
-
-
-
-
