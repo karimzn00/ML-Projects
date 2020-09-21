@@ -1,5 +1,5 @@
 import numpy as np
-import functools
+from net_tools import sigmoid, relu
 import sys
 
 
@@ -12,6 +12,7 @@ class Inp:
 			inp_shape = (inp_shape[0], inp_shape[1], 1)
 		self.inp_shape = inp_shape
 		self.layero_size = inp_shape
+		
 
 
 
@@ -59,8 +60,8 @@ class Conv:
 
 	def convolution_(self, x, conv_filter):
 		result = np.zeros(shape=(x.shape[0], x.shape[1], conv_filter.shape[0]))
-		for r in np.uint16(np.arang(self.params_size[1]/2.0, x.shape[0] - self.params_size[1]/2.0 + 1)):
-			for c in np.uint16(np.arang(self.params_size[1]/2.0, x.shape[1] - self.params_size[1]/2.0 + 1)):
+		for r in np.uint16(np.arange(self.params_size[1]/2.0, x.shape[0] - self.params_size[1]/2.0 + 1)):
+			for c in np.uint16(np.arange(self.params_size[1]/2.0, x.shape[1] - self.params_size[1]/2.0 + 1)):
 				if len(x.shape) == 2:
 					curr_reg = x[r - np.uint16(np.floor(self.params_size[1]/2.0)):r + np.uint16(np.ceil(self.params_size[1]/2.0)), c - np.uint16(np.floor(self.params_size[1]/2.0)):c + np.uint16(np.ceil(self.params_size[1]/2.0))]
 				else:
@@ -78,8 +79,8 @@ class Conv:
 	def convolution(self, x):
 
 		if len(x.shape) != len(self.initial_params.shape) - 1:
-			print(x.shape)
-			print(self.initial_params.shape)
+			print(len(x.shape))
+			print(len(self.initial_params.shape))
 			print('The dimension of both input and the filter are not equal !')
 			sys.exit()
 		elif len(x.shape) > 2 or len(self.initial_params.shape) > 3:
