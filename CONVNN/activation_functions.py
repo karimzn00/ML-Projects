@@ -34,8 +34,3 @@ def softmax(inp):
     return sm
 
 ################################################################
-c = int(input())
-print('relu({}) = {}'.format(c, relu(c)))
-print('sigmoid({}) = {}'.format(c, sigmoid(c)))
-print('tanh({}) = {}'.format(c, tanh(c)))
-print('softmax({}) = {}'.format(c, softmax(c)))
