@@ -1,5 +1,5 @@
 import numpy as np
-from net_tools import sigmoid, relu
+from activation_functions import sigmoid, relu
 import sys
 
 
