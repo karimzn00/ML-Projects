@@ -2,6 +2,9 @@ import numpy as np
 import sys
 from time import time
 from layer_types import *
+from numba import vectorize
+
+@vectorize(['float32(float32, float32)'], target='cuda')
 
 class Model:
 	def __init__(self, l_layer, epochs = 1000, learning_rate = 0.01):
@@ -29,7 +32,7 @@ class Model:
 		for epoch in range(self.epochs):
 			print('epoch : {}/{} \n'.format(epoch, self.epochs))
 			for s in range(x.shape[0]):
-				self.feed(x[s,1])
+				self.feed(x[s,:])
 				try:
 					pred_y = np.where(np.max(self.l_layer.o_layer) == self.l_layer.o_layer)[0][0]
 				except:
@@ -42,19 +45,21 @@ class Model:
 		for l in self.net_layers:
 			if type(l) is Conv:
 				time1 = time()
+				print(lo_layer.shape)
 				l.convolution(lo_layer)
 				time2 = time()
 				print(time2 - time1)
 			elif type(l) is Dense:
 				l.dense_layer(lo_layer)
-			elif type(l) is Pooling(pool = 'max'):
-				l.pool(lo_layer, 'max')
-			elif type(l) is Pooling(pool = 'average'):
-				l.pool(lo_layer, 'average')
+			elif type(l) is Pooling:
+				if l.pool == 'max':
+					l.pool(lo_layer, 'max')
+				if l.pool == 'average':
+					l.pool(lo_layer, 'average')
 			elif type(l) is Relu:
-				l.relu_l(lo_layer)
+				l.relu_layer(lo_layer)
 			elif type(l) is Sigmoid:
-				l.sigmoid_l(lo_layer)
+				l.sigmoid_layer(lo_layer)
 			elif type(l) is Flattern:
 				l.flatten(lo_layer)
 			elif type(l) is Inp:
